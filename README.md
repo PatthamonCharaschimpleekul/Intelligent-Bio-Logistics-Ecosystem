@@ -1,5 +1,6 @@
 # 🧬 Intelligent Bio-Logistics Ecosystem
 ### AI-Driven Thermal Management for Critical Medical Cold Chain
+Pending Petty Patent No. 2603001257 - "Intelligent Bio-Logistics Ecosystem for Critical Medical Supply" (AI-Driven PCM Box)
 
 ![Status](https://img.shields.io/badge/Status-Innovation--Concept-blueviolet)
 ![Domain](https://img.shields.io/badge/Domain-Digital--Health--Logistics-green)
