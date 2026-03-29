@@ -9,7 +9,7 @@ plt.stem(methods, failure_rates, linefmt='grey', markerfmt='D', basefmt=" ")
 
 plt.ylabel('Probability of Medical Waste (%)', fontsize=12)
 plt.title('Reliability & Waste Reduction in Critical Logistics', fontsize=14, fontweight='bold')
-plt.ylim(0, 50)
+plt.ylim(0, 40)
 
 for i, v in enumerate(failure_rates):
     plt.text(i, v + 2, f'{v}%', ha='center', color='black', fontweight='bold')
