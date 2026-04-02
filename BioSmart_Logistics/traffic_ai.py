@@ -41,18 +41,22 @@ class traffic_prediction:
     
     def predict_density(self, hour, day_index):
         if not self.is_trained:
-            return 0.4
-        
-        # Predict class and map back to density (0.0 - 1.0)
-        prediction_class = self.model.predict([[hour, day_index]])[0]
+          return 0.4
+    
+            # FIX: Create a small DataFrame with the same column names used during training
+        input_data = pd.DataFrame([[hour, day_index]], columns=['Hour', 'Day_Index'])
+            
+            # Predict class using the DataFrame
+        prediction_class = self.model.predict(input_data)[0]
+            
         density_map = {0: 0.2, 1: 0.4, 2: 0.7, 3: 1.0}
         return density_map.get(prediction_class, 0.4)
-
+    
 if __name__ == "__main__":
     ai = traffic_prediction()
     
     # Use your absolute path here
-    path = 'data\Traffic.csv'
+    path = r'data\Traffic.csv'
     
     ai.train_from_csv(path)
 
