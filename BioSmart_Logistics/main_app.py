@@ -7,26 +7,30 @@ def run_biologis_system():
     print("--- BioSmart Logistics System Starting :) ---")
 
     # 1. Initialize Components
-    # Using 40.0°C as the constant ambient stress test
+    # Ensure sensor_sim has a class/function named box_simulator
     sensor = box_simulator(start_temp=2.0, ambient_temp=40.0)
+    
+    # Ensure RBA_logic has a class/function named rba_calculator
     logic = rba_calculator()
-    ai = traffic_prediction() # Added () to instantiate the class
+    
+    # Ensure traffic_ai has a class/function named traffic_prediction
+    ai = traffic_prediction() 
 
     # 2. Train AI before starting
     print("AI is learning from Kaggle dataset...")
-    # Use the absolute path or relative path to your CSV
     ai.train_from_csv(r'data\Traffic.csv')
 
     if not ai.is_trained:
         print("Error: System cannot start without AI training.")
         return
 
-    # --- NEW: STEP 3 - PRE-TRIP ANALYSIS (PLANNING PHASE) ---
+    # --- STEP 1: PRE-TRIP PLANNING ---
     print("\n[STEP 1: PRE-TRIP PLANNING]")
-    # Predict traffic for 8 AM Monday
+    
+    # Calling function from traffic_ai
     predicted_traffic = ai.predict_density(hour=8, day_index=0)
     
-    # Calculate recommended PCM for a 2-hour planned trip at 40°C
+    # Calling planning function from RBA_logic
     recommended_pcm = logic.analyze_required_pcm(
         target_hours=2, 
         ambient_temp=40.0, 
@@ -38,18 +42,17 @@ def run_biologis_system():
     print("--------------------------------------------------")
     input("System Ready. Press ENTER to start real-time monitoring...")
 
-    # --- STEP 4 - REAL-TIME MONITORING ---
+    # --- STEP 2: REAL-TIME MONITORING ---
     print("\n[STEP 2: REAL-TIME MONITORING] (Press Ctrl+C to stop)")
     print("-" * 50)
 
     try:
-        # Simulate 20 minutes of delivery (1 loop = 1 second for demo)
         for minute in range(1, 21):
-            # A. Get current Internal Temp from sensor
+            # A. Get Temp
             current_t = sensor.get_temperature()
 
-            # B. Calculate RBA using the recommended PCM mass from our analysis
-            # Now passing 4 parameters: (temp_int, temp_amb, pcm_mass, traffic_density)
+            # B. Calculate RBA
+            # Ensure the function in rba_calculator accepts these 4 arguments
             t_rba = logic.calculate_rba(
                 temp_int=current_t, 
                 temp_amb=40.0, 
@@ -57,11 +60,11 @@ def run_biologis_system():
                 traffic_density=predicted_traffic
             )
 
-            # C. Display Dashboard
+            # C. Dashboard display
             print(f"Minute: {minute:02d} | Temp: {current_t:.2f}°C | PCM: {recommended_pcm}g")
             print(f"Traffic Density: {predicted_traffic} | tRBA: {t_rba} mins")
 
-            if t_rba < 30: # Warning threshold adjusted for realism
+            if t_rba < 30:
                 print("!!! WARNING: THERMAL BUFFER LOW - SHIPMENT AT RISK !!!")
             
             print("-" * 50)
